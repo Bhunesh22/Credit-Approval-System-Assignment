@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/backend_assignment
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: credit_approval_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+
+volumes:
+  postgres_data:
