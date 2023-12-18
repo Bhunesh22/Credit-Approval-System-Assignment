@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from .models import Customer, Loan
 from .serializers import CustomerSerializer
 from .serializers import LoanSerializer
-from datetime import datetime
 from datetime import date
 import time
 import random
@@ -50,7 +49,6 @@ def check_eligibility(request):
             return Response({'error': 'Customer not found'}, status=status.HTTP_404_NOT_FOUND)
 
         credit_score = calculate_credit_score(customer)
-        print("credit_score", credit_score)
 
         if credit_score > 50:
             approved_loan = True
@@ -82,7 +80,6 @@ def calculate_credit_score(customer):
     loans_of_customer = Loan.objects.filter(customer_id=customer.id)
 
     if len(loans_of_customer) == 0 :
-        print("loans_of_customer", len(loans_of_customer))
         return 0
 
     number_of_past_loans = len(loans_of_customer)
@@ -125,10 +122,6 @@ def calculate_credit_score(customer):
     if current_monthly_emis > 0.5 * customer.monthly_salary:
         return 0
 
-    print("payment_on_time_percent", payment_on_time_percent)
-    print("percent_of_loan_approved_volume_in_ten_lakhs", percent_of_loan_approved_volume_in_ten_lakhs)
-    print("number_of_past_loans", number_of_past_loans)
-    print("no_of_currently_active_loan", no_of_currently_active_loan)
     weight_payment_on_time_percent = 0.35
     weight_loan_approved_volume = 0.2
     score_per_past_loans = 5  # Maximum 25 so it holds 0.25 weight
